@@ -13,10 +13,29 @@ void Frame::forwardDeleteButtonPressed()
 
 void Frame::addProperty()
 {
-
+    QLineEdit* newProperty = new QLineEdit();
+    QLineEdit* newDescription = new QLineEdit();
+    _propertyVLayout->insertWidget(_propertyVLayout->count() - 1, newProperty);
+    _descriptionVLayout->insertWidget(_descriptionVLayout->count() - 1, newDescription);
 }
 
 void Frame::removeProperty()
+{
+    if(!(_propertyVLayout->count() == 2))
+    {
+        auto itemToRemoveIndex = _descriptionHLayout->count() - 2;
+        auto itemToRemove = _propertyVLayout->itemAt(itemToRemoveIndex);
+        _propertyVLayout->removeItem(itemToRemove);
+        if(itemToRemove->widget())
+        {
+            delete itemToRemove->widget();
+            itemToRemove->widget()->setParent(nullptr);
+        }
+        delete itemToRemove;
+    }
+}
+
+void Frame::changeComboBoxIndex(int index)
 {
 
 }
@@ -74,6 +93,7 @@ void Frame::connectSlots()
     connect(_buttonAddProperty, &QPushButton::pressed, this, &Frame::addProperty);
     connect(_buttonRemoveProperty, &QPushButton::pressed, this, &Frame::removeProperty);
     connect(_buttonDeleteFrame, &QPushButton::pressed, this, &Frame::forwardDeleteButtonPressed);
+    connect(_comboBox, &QComboBox::currentIndexChanged, this, &Frame::changeComboBoxIndex);
 }
 
 

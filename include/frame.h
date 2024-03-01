@@ -25,6 +25,9 @@ private slots:
     void addProperty();
 
     void removeProperty();
+
+    void changeComboBoxIndex(int index);
+
 private:
     QPushButton* _buttonAddProperty;
     QPushButton* _buttonRemoveProperty;
