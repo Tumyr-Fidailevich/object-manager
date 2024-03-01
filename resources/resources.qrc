@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/rsc">
+        <file>qt_new.png</file>
+        <file>qt_open.png</file>
+        <file>save.png</file>
+        <file>save_as.png</file>
+        <file>help.png</file>
+    </qresource>
+</RCC>
