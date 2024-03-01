@@ -9,14 +9,22 @@
 #include <QSpacerItem>
 #include <QLineEdit>
 
-class Frame : QFrame
+class Frame : public QFrame
 {
     Q_OBJECT
 
 public:
     Frame(QWidget* parent = nullptr);
+
 signals:
     void deleteSelf();
+
+private slots:
+    void forwardDeleteButtonPressed();
+
+    void addProperty();
+
+    void removeProperty();
 private:
     QPushButton* _buttonAddProperty;
     QPushButton* _buttonRemoveProperty;
@@ -32,6 +40,8 @@ private:
     QHBoxLayout* _buttonsHLayout;
     QHBoxLayout* _deleteButtonHLayout;
     QSpacerItem* _deleteButtonHSpacer;
+
+    void connectSlots();
 };
 
 #endif // FRAME_H

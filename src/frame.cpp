@@ -46,5 +46,27 @@ Frame::Frame(QWidget* parent) : QFrame(parent)
     _descriptionHLayout = new QHBoxLayout();
     _descriptionVLayout->addLayout(_descriptionHLayout);
 
+    connectSlots();
 }
 
+void Frame::forwardDeleteButtonPressed()
+{
+    emit deleteSelf();
+}
+
+void Frame::addProperty()
+{
+
+}
+
+void Frame::removeProperty()
+{
+
+}
+
+void Frame::connectSlots()
+{
+    connect(_buttonAddProperty, &QPushButton::pressed, this, &Frame::addProperty);
+    connect(_buttonRemoveProperty, &QPushButton::pressed, this, &Frame::removeProperty);
+    connect(_buttonDeleteFrame, &QPushButton::pressed, this, &Frame::forwardDeleteButtonPressed);
+}
