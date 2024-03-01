@@ -106,6 +106,7 @@ void Frame::setupUi()
     _comboBox->setCurrentIndex(-1);
     _comboBox->setEditable(true);
     _mainHLayout->addWidget(_comboBox);
+
     addDefaultItemsToComboBox();
 
     //PropertyLayout

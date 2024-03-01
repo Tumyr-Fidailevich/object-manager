@@ -5,6 +5,8 @@
 #include <QCloseEvent>
 #include <QDialog>
 #include <memory>
+#include "frame.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -20,7 +22,7 @@ public:
     ~MainWindow();
 
 private slots:
-    void createCell();
+    void createFrame();
 
     void deleteCell();
 
@@ -43,5 +45,7 @@ private:
     void setupActions();
 
     void createSaveChangesQuestionWindow();
+
+    void connectSlots();
 };
 #endif // MAINWINDOW_H

@@ -10,11 +10,12 @@ MainWindow::MainWindow(QWidget *parent)
     _ui->setupUi(this);
     this->setWindowTitle("unsaved.json");
     setupActions();
+    connectSlots();
 }
 
 MainWindow::~MainWindow() {}
 
-void MainWindow::createCell()
+void MainWindow::createFrame()
 {
 
 }
@@ -74,4 +75,9 @@ void MainWindow::setupActions()
 void MainWindow::createSaveChangesQuestionWindow()
 {
 
+}
+
+void MainWindow::connectSlots()
+{
+    connect(_ui->buttonAdd, &QPushButton::pressed, this, &MainWindow::createFrame);
 }
