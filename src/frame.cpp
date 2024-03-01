@@ -62,9 +62,10 @@ void Frame::changeComboBoxIndex(int index)
     auto objectName = _comboBox->itemText(index);
 
     if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) return;
+    auto jsonData = file.readAll();
     file.close();
 
-    auto jsonData = file.readAll();
+
     auto jsonDocument = QJsonDocument::fromJson(jsonData);
     if (!jsonDocument.isNull()) {
         auto rootJsonObject = jsonDocument.object();
@@ -201,4 +202,11 @@ std::pair<QString, QString> Frame::getPropetryAndDescriptionByIndex(int index)
         description = qobject_cast<QLineEdit*>(descriptionItem->widget())->text();
     }
     return {propertyName, description};
+}
+
+void Frame::addDefaultItemsToComboBox()
+{
+    QFile file(":/json/defaoult_objects.json");
+
+
 }
