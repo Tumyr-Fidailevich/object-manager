@@ -6,6 +6,23 @@ Frame::Frame(QWidget* parent) : QFrame(parent)
     connectSlots();
 }
 
+QJsonObject Frame::createJsonDump()
+{
+    QJsonObject dump;
+
+    QJsonObject propertyObject;
+
+    QString objectName = _comboBox->currentText();
+
+    for (int i = 0; i < _propertyVLayout->count() - 1; i++) {
+        auto [propertyName, description] = getPropetryAndDescriptionByIndex(i);
+
+        if(!propertyName.isEmpty()) propertyObject[propertyName] = QJsonValue(description);
+    }
+    dump[objectName] = propertyObject;
+    return dump;
+}
+
 void Frame::forwardDeleteButtonPressed()
 {
     emit deleteSelf();
