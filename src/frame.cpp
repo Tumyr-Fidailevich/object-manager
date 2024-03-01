@@ -65,7 +65,6 @@ void Frame::changeComboBoxIndex(int index)
     auto jsonData = file.readAll();
     file.close();
 
-
     auto jsonDocument = QJsonDocument::fromJson(jsonData);
     if (!jsonDocument.isNull()) {
         auto rootJsonObject = jsonDocument.object();
@@ -207,6 +206,16 @@ std::pair<QString, QString> Frame::getPropetryAndDescriptionByIndex(int index)
 void Frame::addDefaultItemsToComboBox()
 {
     QFile file(":/json/defaoult_objects.json");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) return;
+    QByteArray jsonData = file.readAll();
+    file.close();
 
+    QJsonDocument document = QJsonDocument::fromJson(jsonData);
 
+    QJsonObject rootObject = document.object();
+
+    for (auto it = rootObject.begin(); it != rootObject.end(); it++)
+    {
+        _comboBox->addItem(it.key());
+    }
 }
