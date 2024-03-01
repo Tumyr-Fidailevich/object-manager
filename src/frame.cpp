@@ -88,50 +88,67 @@ void Frame::changeComboBoxIndex(int index)
 
 void Frame::setupUi()
 {
-    //Main
+    //Frame
     this->setFrameShape(QFrame::StyledPanel);
     this->setFrameShadow(QFrame::Raised);
-
     _mainVLayout = new QVBoxLayout(this);
     _mainHLayout = new QHBoxLayout();
-    _deleteButtonHLayout = new QHBoxLayout();
-    _mainVLayout->addLayout(_mainHLayout);
-    _mainVLayout->addLayout(_deleteButtonHLayout);
+    _comboBox = new QComboBox(this);
 
-
-    //Delete button
-    _deleteButtonHSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-    _buttonDeleteFrame = new QPushButton();
-    _deleteButtonHLayout->addItem(_deleteButtonHSpacer);
-    _deleteButtonHLayout->addWidget(_buttonDeleteFrame);
-
-
+    // Добавить элементы в comboBox
     //ComboBox
-
-    _comboBox = new QComboBox();
+    QSizePolicy comboBoxSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    comboBoxSizePolicy.setHorizontalStretch(0);
+    comboBoxSizePolicy.setVerticalStretch(0);
+    comboBoxSizePolicy.setHeightForWidth(_comboBox->sizePolicy().hasHeightForWidth());
+    _comboBox->setSizePolicy(comboBoxSizePolicy);
+    _comboBox->setCurrentIndex(-1);
+    _comboBox->setEditable(true);
     _mainHLayout->addWidget(_comboBox);
 
     //PropertyLayout
     _propertyVLayout = new QVBoxLayout();
-    _mainHLayout->addLayout(_propertyVLayout);
-    QLineEdit* propertyLineEdit = new QLineEdit();
+    _propertyVLayout->setSizeConstraint(QLayout::SetMinimumSize);
+    auto propertyLineEdit  = new QLineEdit();
+    QSizePolicy lineEditSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
+    lineEditSizePolicy.setHorizontalStretch(0);
+    lineEditSizePolicy.setVerticalStretch(0);
+    lineEditSizePolicy.setHeightForWidth(propertyLineEdit ->sizePolicy().hasHeightForWidth());
+    propertyLineEdit ->setSizePolicy(lineEditSizePolicy);
     _propertyVLayout->addWidget(propertyLineEdit);
 
-    _buttonAddProperty = new QPushButton();
-    _buttonRemoveProperty = new QPushButton();
+    //ButtonsLayout
     _buttonsHLayout = new QHBoxLayout();
-    _propertyVLayout->addLayout(_buttonsHLayout);
+    _buttonAddProperty = new QPushButton(this);
+    _buttonRemoveProperty = new QPushButton(this);
+
     _buttonsHLayout->addWidget(_buttonAddProperty);
     _buttonsHLayout->addWidget(_buttonRemoveProperty);
+    _propertyVLayout->addLayout(_buttonsHLayout);
 
-    //DesccriptionLayout
+    _mainHLayout->addLayout(_propertyVLayout);
+
+    //DescriptionLayout
     _descriptionVLayout = new QVBoxLayout();
-    _mainHLayout->addLayout(_descriptionVLayout);
-    QLineEdit* descriptionLineEdit = new QLineEdit();
+    auto descriptionLineEdit = new QLineEdit();
     _descriptionVLayout->addWidget(descriptionLineEdit);
-
     _descriptionHLayout = new QHBoxLayout();
     _descriptionVLayout->addLayout(_descriptionHLayout);
+
+    _mainHLayout->addLayout(_descriptionVLayout);
+
+
+    //DeleteButtonLayout
+    _deleteButtonHLayout = new QHBoxLayout();
+    _deleteButtonHSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+    _buttonDeleteFrame = new QPushButton(this);
+
+    _deleteButtonHLayout->addItem(_deleteButtonHSpacer);
+    _deleteButtonHLayout->addWidget(_buttonDeleteFrame);
+
+    //AddLayouts
+    _mainVLayout->addLayout(_mainHLayout);
+    _mainVLayout->addLayout(_deleteButtonHLayout);
 }
 
 void Frame::connectSlots()

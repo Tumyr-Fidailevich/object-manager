@@ -108,13 +108,8 @@
                 <bool>true</bool>
                </property>
                <property name="currentIndex">
-                <number>0</number>
+                <number>-1</number>
                </property>
-               <item>
-                <property name="text">
-                 <string/>
-                </property>
-               </item>
                <item>
                 <property name="text">
                  <string>New Item 1</string>
