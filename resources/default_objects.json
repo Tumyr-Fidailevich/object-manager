@@ -7,7 +7,7 @@
     "Wall" : {
         "Property" : {
             "Icon" : "Изображение",
-            "Material" : ["Steel", "Stone", "Wood"]
+            "Material" : "Steel, Stone, Wood"
         }
     },
     "Ladder" : {

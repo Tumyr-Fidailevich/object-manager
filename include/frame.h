@@ -8,6 +8,9 @@
 #include <QComboBox>
 #include <QSpacerItem>
 #include <QLineEdit>
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 class Frame : public QFrame
 {
@@ -15,6 +18,8 @@ class Frame : public QFrame
 
 public:
     Frame(QWidget* parent = nullptr);
+
+    QJsonObject createJsonDump();
 
 signals:
     void deleteSelf();
@@ -47,6 +52,12 @@ private:
     void setupUi();
 
     void connectSlots();
+
+    void clearPropertiesAndDescriptionsLayouts();
+
+    void addNewPropertyAndDescription(QLineEdit* propertyLineEdit, QLineEdit* descriptionLineEdit);
+
+    std::pair<QString, QString> getPropetryAndDescriptionByIndex(int index);
 };
 
 #endif // FRAME_H

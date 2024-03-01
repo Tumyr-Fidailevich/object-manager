@@ -15,29 +15,58 @@ void Frame::addProperty()
 {
     QLineEdit* newProperty = new QLineEdit();
     QLineEdit* newDescription = new QLineEdit();
-    _propertyVLayout->insertWidget(_propertyVLayout->count() - 1, newProperty);
-    _descriptionVLayout->insertWidget(_descriptionVLayout->count() - 1, newDescription);
+    addNewPropertyAndDescription(newProperty, newDescription);
 }
 
 void Frame::removeProperty()
 {
-    if(!(_propertyVLayout->count() == 2))
+    if(!(_propertyVLayout->count() <= 2))
     {
-        auto itemToRemoveIndex = _descriptionHLayout->count() - 2;
-        auto itemToRemove = _propertyVLayout->itemAt(itemToRemoveIndex);
-        _propertyVLayout->removeItem(itemToRemove);
-        if(itemToRemove->widget())
+        auto itemToRemoveIndex = _propertyVLayout->count() - 2;
+        auto propertyItemToRemove = _propertyVLayout->itemAt(itemToRemoveIndex);
+        auto descriptionItemToRemove = _descriptionVLayout->itemAt(itemToRemoveIndex);
+        _propertyVLayout->removeItem(propertyItemToRemove);
+        _descriptionVLayout->removeItem(descriptionItemToRemove);
+        if(propertyItemToRemove->widget() && descriptionItemToRemove->widget())
         {
-            delete itemToRemove->widget();
-            itemToRemove->widget()->setParent(nullptr);
+            delete propertyItemToRemove->widget();
+            delete descriptionItemToRemove->widget();
+            propertyItemToRemove->widget()->setParent(nullptr);
+            descriptionItemToRemove->widget()->setParent(nullptr);
         }
-        delete itemToRemove;
+        delete propertyItemToRemove;
+        delete descriptionItemToRemove;
     }
 }
 
 void Frame::changeComboBoxIndex(int index)
 {
+    QFile file(":/json/defaoult_objects.json");
+    auto objectName = _comboBox->itemText(index);
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        auto jsonData = file.readAll();
+        auto jsonDocument = QJsonDocument::fromJson(jsonData);
+        if (!jsonDocument.isNull()) {
+            auto rootJsonObject = jsonDocument.object();
+            QJsonObject propertyObject = rootJsonObject[objectName].toObject()["Property"].toObject();
 
+            clearPropertiesAndDescriptionsLayouts();
+
+            for (auto it = propertyObject.begin(); it != propertyObject.end(); ++it) {
+                QString key = it.key();
+                QString value = it.value().toString();
+
+                auto propertyLineEdit = new QLineEdit();
+                auto descriptionLineEdit = new QLineEdit();
+
+                propertyLineEdit->setText(key);
+                descriptionLineEdit->setText(value);
+
+                addNewPropertyAndDescription(propertyLineEdit, descriptionLineEdit);
+            }
+        }
+    }
 }
 
 void Frame::setupUi()
@@ -96,4 +125,45 @@ void Frame::connectSlots()
     connect(_comboBox, &QComboBox::currentIndexChanged, this, &Frame::changeComboBoxIndex);
 }
 
+void Frame::clearPropertiesAndDescriptionsLayouts()
+{
+    while(_propertyVLayout->count() > 1)
+    {
+        auto propertyItem = _propertyVLayout->takeAt(0);
+        auto descriptionItem = _descriptionVLayout->takeAt(0);
+        if(propertyItem->widget())
+        {
+            delete propertyItem->widget();
+        }
+        if(descriptionItem->widget())
+        {
+            delete descriptionItem->widget();
+        }
+        delete propertyItem;
+        delete descriptionItem;
+    }
+}
+
+void Frame::addNewPropertyAndDescription(QLineEdit* propertyLineEdit, QLineEdit* descriptionLineEdit)
+{
+    _propertyVLayout->insertWidget(_propertyVLayout->count() - 2, propertyLineEdit);
+    _descriptionVLayout->insertWidget(_descriptionVLayout->count() - 2, descriptionLineEdit);
+}
+
+std::pair<QString, QString> Frame::getPropetryAndDescriptionByIndex(int index)
+{
+    QLayoutItem* propertyItem = _propertyVLayout->itemAt(index);
+    QLayoutItem* descriptionItem = _descriptionVLayout->itemAt(index);
+    QString propertyName;
+    QString description;
+    if (propertyItem && propertyItem->widget())
+    {
+        propertyName = qobject_cast<QLineEdit*>(propertyItem->widget())->text();
+    }
+    if(descriptionItem && descriptionItem->widget())
+    {
+        description = qobject_cast<QLineEdit*>(descriptionItem->widget())->text();
+    }
+    return {propertyName, description};
+}
 
