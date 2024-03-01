@@ -58,6 +58,8 @@ private:
     void addNewPropertyAndDescription(QLineEdit* propertyLineEdit, QLineEdit* descriptionLineEdit);
 
     std::pair<QString, QString> getPropetryAndDescriptionByIndex(int index);
+
+    void addDefaultItemsToComboBox();
 };
 
 #endif // FRAME_H

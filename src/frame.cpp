@@ -60,28 +60,29 @@ void Frame::changeComboBoxIndex(int index)
 {
     QFile file(":/json/defaoult_objects.json");
     auto objectName = _comboBox->itemText(index);
-    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        auto jsonData = file.readAll();
-        auto jsonDocument = QJsonDocument::fromJson(jsonData);
-        if (!jsonDocument.isNull()) {
-            auto rootJsonObject = jsonDocument.object();
-            QJsonObject propertyObject = rootJsonObject[objectName].toObject()["Property"].toObject();
 
-            clearPropertiesAndDescriptionsLayouts();
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) return;
+    file.close();
 
-            for (auto it = propertyObject.begin(); it != propertyObject.end(); ++it) {
-                QString key = it.key();
-                QString value = it.value().toString();
+    auto jsonData = file.readAll();
+    auto jsonDocument = QJsonDocument::fromJson(jsonData);
+    if (!jsonDocument.isNull()) {
+        auto rootJsonObject = jsonDocument.object();
+        QJsonObject propertyObject = rootJsonObject[objectName].toObject()["Property"].toObject();
 
-                auto propertyLineEdit = new QLineEdit();
-                auto descriptionLineEdit = new QLineEdit();
+        clearPropertiesAndDescriptionsLayouts();
 
-                propertyLineEdit->setText(key);
-                descriptionLineEdit->setText(value);
+        for (auto it = propertyObject.begin(); it != propertyObject.end(); ++it) {
+            QString key = it.key();
+            QString value = it.value().toString();
 
-                addNewPropertyAndDescription(propertyLineEdit, descriptionLineEdit);
-            }
+            auto propertyLineEdit = new QLineEdit();
+            auto descriptionLineEdit = new QLineEdit();
+
+            propertyLineEdit->setText(key);
+            descriptionLineEdit->setText(value);
+
+            addNewPropertyAndDescription(propertyLineEdit, descriptionLineEdit);
         }
     }
 }
@@ -105,6 +106,7 @@ void Frame::setupUi()
     _comboBox->setCurrentIndex(-1);
     _comboBox->setEditable(true);
     _mainHLayout->addWidget(_comboBox);
+    addDefaultItemsToComboBox();
 
     //PropertyLayout
     _propertyVLayout = new QVBoxLayout();
@@ -200,4 +202,3 @@ std::pair<QString, QString> Frame::getPropetryAndDescriptionByIndex(int index)
     }
     return {propertyName, description};
 }
-
