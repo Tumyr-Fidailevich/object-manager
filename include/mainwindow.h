@@ -24,7 +24,7 @@ public:
 private slots:
     void createFrame();
 
-    void deleteCell();
+    void deleteFrame();
 
     void saveActionSlot();
 

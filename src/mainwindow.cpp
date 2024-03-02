@@ -17,12 +17,21 @@ MainWindow::~MainWindow() {}
 
 void MainWindow::createFrame()
 {
+    auto newFrame = new Frame(this);
 
+    connect(newFrame, &Frame::deleteSelf, this, &MainWindow::deleteFrame);
+
+    _ui->scrollAreaVLayout->addWidget(newFrame);
 }
 
-void MainWindow::deleteCell()
+void MainWindow::deleteFrame()
 {
-
+    auto frameForDelete = qobject_cast<QFrame*>(sender());
+    if(frameForDelete)
+    {
+        _ui->scrollAreaVLayout->removeWidget(frameForDelete);
+        frameForDelete->deleteLater();
+    }
 }
 
 void MainWindow::saveActionSlot()
