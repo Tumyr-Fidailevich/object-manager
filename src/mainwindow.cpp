@@ -88,5 +88,5 @@ void MainWindow::createSaveChangesQuestionWindow()
 
 void MainWindow::connectSlots()
 {
-    connect(_ui->buttonAdd, &QPushButton::pressed, this, &MainWindow::createFrame);
+    connect(_ui->buttonAddFrame, &QPushButton::pressed, this, &MainWindow::createFrame);
 }

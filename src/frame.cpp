@@ -46,10 +46,10 @@ void Frame::removeProperty()
         _descriptionVLayout->removeItem(descriptionItemToRemove);
         if(propertyItemToRemove->widget() && descriptionItemToRemove->widget())
         {
-            delete propertyItemToRemove->widget();
-            delete descriptionItemToRemove->widget();
             propertyItemToRemove->widget()->setParent(nullptr);
             descriptionItemToRemove->widget()->setParent(nullptr);
+            delete propertyItemToRemove->widget();
+            delete descriptionItemToRemove->widget();
         }
         delete propertyItemToRemove;
         delete descriptionItemToRemove;
@@ -215,8 +215,16 @@ void Frame::addDefaultItemsToComboBox()
 
     QJsonObject rootObject = document.object();
 
+    int index = 0;
+
+    if(rootObject.isEmpty()) qDebug() << "Root object empty";
     for (auto it = rootObject.begin(); it != rootObject.end(); it++)
     {
-        _comboBox->addItem(it.key());
+        _comboBox->addItem(QString());
+    }
+    for (auto it = rootObject.begin(); it != rootObject.end(); it++, index++)
+    {
+        _comboBox->setItemText(index, it.key());
+        qDebug() << "Item key: " << it.key();
     }
 }
