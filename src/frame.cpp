@@ -93,7 +93,7 @@ void Frame::setupUi()
     this->setFrameShape(QFrame::StyledPanel);
     this->setFrameShadow(QFrame::Raised);
     _mainVLayout = new QVBoxLayout(this);
-    _mainHLayout = new QHBoxLayout();
+    _mainHLayout = new QHBoxLayout(this);
     _comboBox = new QComboBox(this);
 
     //ComboBox
@@ -107,9 +107,9 @@ void Frame::setupUi()
     _mainHLayout->addWidget(_comboBox);
 
     //PropertyLayout
-    _propertyVLayout = new QVBoxLayout();
+    _propertyVLayout = new QVBoxLayout(this);
     _propertyVLayout->setSizeConstraint(QLayout::SetMinimumSize);
-    auto propertyLineEdit  = new QLineEdit();
+    auto propertyLineEdit  = new QLineEdit(this);
     QSizePolicy lineEditSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
     lineEditSizePolicy.setHorizontalStretch(0);
     lineEditSizePolicy.setVerticalStretch(0);
@@ -118,7 +118,7 @@ void Frame::setupUi()
     _propertyVLayout->addWidget(propertyLineEdit);
 
     //ButtonsLayout
-    _buttonsHLayout = new QHBoxLayout();
+    _buttonsHLayout = new QHBoxLayout(this);
     _buttonAddProperty = new QPushButton(this);
     _buttonRemoveProperty = new QPushButton(this);
 
@@ -158,7 +158,7 @@ void Frame::connectSlots()
     connect(_buttonAddProperty, &QPushButton::pressed, this, &Frame::addProperty);
     connect(_buttonRemoveProperty, &QPushButton::pressed, this, &Frame::removeProperty);
     connect(_buttonDeleteFrame, &QPushButton::pressed, this, &Frame::forwardDeleteButtonPressed);
-    connect(_comboBox, &QComboBox::currentIndexChanged, this, &Frame::changeComboBoxIndex);
+    connect(_comboBox, &QComboBox::activated, this, &Frame::changeComboBoxIndex);
 }
 
 void Frame::clearPropertiesAndDescriptionsLayouts()
@@ -231,4 +231,6 @@ void Frame::addDefaultItemsToComboBox()
     {
         _comboBox->setItemText(index, it.key());
     }
+
+    _comboBox->setCurrentIndex(-1);
 }
