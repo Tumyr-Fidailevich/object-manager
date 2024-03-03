@@ -30,8 +30,8 @@ void Frame::forwardDeleteButtonPressed()
 
 void Frame::addProperty()
 {
-    QLineEdit* newProperty = new QLineEdit();
-    QLineEdit* newDescription = new QLineEdit();
+    QLineEdit* newProperty = new QLineEdit(this);
+    QLineEdit* newDescription = new QLineEdit(this);
     addNewPropertyAndDescription(newProperty, newDescription);
 }
 
@@ -58,7 +58,7 @@ void Frame::removeProperty()
 
 void Frame::changeComboBoxIndex(int index)
 {
-    QFile file(":/json/defaoult_objects.json");
+    QFile file(":/json/default_objects.json");
     auto objectName = _comboBox->itemText(index);
 
     if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) return;
@@ -66,24 +66,24 @@ void Frame::changeComboBoxIndex(int index)
     file.close();
 
     auto jsonDocument = QJsonDocument::fromJson(jsonData);
-    if (!jsonDocument.isNull()) {
-        auto rootJsonObject = jsonDocument.object();
-        QJsonObject propertyObject = rootJsonObject[objectName].toObject()["Property"].toObject();
+    if (jsonDocument.isNull()) return;
 
-        clearPropertiesAndDescriptionsLayouts();
+    auto rootJsonObject = jsonDocument.object();
+    QJsonObject propertyObject = rootJsonObject[objectName].toObject()["Property"].toObject();
 
-        for (auto it = propertyObject.begin(); it != propertyObject.end(); ++it) {
-            QString key = it.key();
-            QString value = it.value().toString();
+    clearPropertiesAndDescriptionsLayouts();
 
-            auto propertyLineEdit = new QLineEdit();
-            auto descriptionLineEdit = new QLineEdit();
+    for (auto it = propertyObject.begin(); it != propertyObject.end(); ++it) {
+        QString key = it.key();
+        QString value = it.value().toString();
 
-            propertyLineEdit->setText(key);
-            descriptionLineEdit->setText(value);
+        auto propertyLineEdit = new QLineEdit(this);
+        auto descriptionLineEdit = new QLineEdit(this);
 
-            addNewPropertyAndDescription(propertyLineEdit, descriptionLineEdit);
-        }
+        propertyLineEdit->setText(key);
+        descriptionLineEdit->setText(value);
+
+        addNewPropertyAndDescription(propertyLineEdit, descriptionLineEdit);
     }
 }
 
@@ -182,8 +182,10 @@ void Frame::clearPropertiesAndDescriptionsLayouts()
 
 void Frame::addNewPropertyAndDescription(QLineEdit* propertyLineEdit, QLineEdit* descriptionLineEdit)
 {
-    _propertyVLayout->insertWidget(_propertyVLayout->count() - 2, propertyLineEdit);
-    _descriptionVLayout->insertWidget(_descriptionVLayout->count() - 2, descriptionLineEdit);
+    int widgetsCount = _propertyVLayout->count();
+    int index = widgetsCount > 1 ?  widgetsCount - 1 : 0;
+    _propertyVLayout->insertWidget(index, propertyLineEdit);
+    _descriptionVLayout->insertWidget(index, descriptionLineEdit);
 }
 
 std::pair<QString, QString> Frame::getPropetryAndDescriptionByIndex(int index)
@@ -215,6 +217,8 @@ void Frame::addDefaultItemsToComboBox()
     file.close();
 
     QJsonDocument document = QJsonDocument::fromJson(jsonData);
+
+    if(document.isNull()) return;
 
     QJsonObject rootObject = document.object();
 
