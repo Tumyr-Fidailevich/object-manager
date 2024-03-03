@@ -21,6 +21,8 @@ public:
 
     QJsonObject createJsonDump();
 
+    void reInitializeFromJson(const QJsonObject& jsonObject);
+
 signals:
     void deleteSelf();
 

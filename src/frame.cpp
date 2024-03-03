@@ -23,6 +23,24 @@ QJsonObject Frame::createJsonDump()
     return dump;
 }
 
+void Frame::reInitializeFromJson(const QJsonObject& jsonObject)
+{
+    clearPropertiesAndDescriptionsLayouts();
+
+    for (auto it = jsonObject.begin(); it != jsonObject.end(); ++it) {
+        QString key = it.key();
+        QString value = it.value().toString();
+
+        auto propertyLineEdit = new QLineEdit(this);
+        auto descriptionLineEdit = new QLineEdit(this);
+
+        propertyLineEdit->setText(key);
+        descriptionLineEdit->setText(value);
+
+        addNewPropertyAndDescription(propertyLineEdit, descriptionLineEdit);
+    }
+}
+
 void Frame::forwardDeleteButtonPressed()
 {
     emit deleteSelf();
@@ -69,22 +87,9 @@ void Frame::changeComboBoxIndex(int index)
     if (jsonDocument.isNull()) return;
 
     auto rootJsonObject = jsonDocument.object();
-    QJsonObject propertyObject = rootJsonObject[objectName].toObject()["Property"].toObject();
+    auto propertyObject = rootJsonObject[objectName].toObject()["Property"].toObject();
 
-    clearPropertiesAndDescriptionsLayouts();
-
-    for (auto it = propertyObject.begin(); it != propertyObject.end(); ++it) {
-        QString key = it.key();
-        QString value = it.value().toString();
-
-        auto propertyLineEdit = new QLineEdit(this);
-        auto descriptionLineEdit = new QLineEdit(this);
-
-        propertyLineEdit->setText(key);
-        descriptionLineEdit->setText(value);
-
-        addNewPropertyAndDescription(propertyLineEdit, descriptionLineEdit);
-    }
+    reInitializeFromJson(propertyObject);
 }
 
 void Frame::setupUi()
