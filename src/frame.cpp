@@ -96,7 +96,6 @@ void Frame::setupUi()
     _mainHLayout = new QHBoxLayout();
     _comboBox = new QComboBox(this);
 
-    // Добавить элементы в comboBox
     //ComboBox
     QSizePolicy comboBoxSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     comboBoxSizePolicy.setHorizontalStretch(0);
@@ -106,8 +105,6 @@ void Frame::setupUi()
     _comboBox->setCurrentIndex(-1);
     _comboBox->setEditable(true);
     _mainHLayout->addWidget(_comboBox);
-
-    addDefaultItemsToComboBox();
 
     //PropertyLayout
     _propertyVLayout = new QVBoxLayout();
@@ -152,6 +149,8 @@ void Frame::setupUi()
     //AddLayouts
     _mainVLayout->addLayout(_mainHLayout);
     _mainVLayout->addLayout(_deleteButtonHLayout);
+
+    addDefaultItemsToComboBox();
 }
 
 void Frame::connectSlots()
@@ -206,8 +205,12 @@ std::pair<QString, QString> Frame::getPropetryAndDescriptionByIndex(int index)
 
 void Frame::addDefaultItemsToComboBox()
 {
-    QFile file(":/json/defaoult_objects.json");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) return;
+    QFile file(":/json/default_objects.json");
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        qDebug() << "returned";
+        return;
+    }
     QByteArray jsonData = file.readAll();
     file.close();
 
@@ -216,8 +219,6 @@ void Frame::addDefaultItemsToComboBox()
     QJsonObject rootObject = document.object();
 
     int index = 0;
-
-    if(rootObject.isEmpty()) qDebug() << "Root object empty";
     for (auto it = rootObject.begin(); it != rootObject.end(); it++)
     {
         _comboBox->addItem(QString());
@@ -225,6 +226,5 @@ void Frame::addDefaultItemsToComboBox()
     for (auto it = rootObject.begin(); it != rootObject.end(); it++, index++)
     {
         _comboBox->setItemText(index, it.key());
-        qDebug() << "Item key: " << it.key();
     }
 }
