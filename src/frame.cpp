@@ -120,7 +120,9 @@ void Frame::setupUi()
     //ButtonsLayout
     _buttonsHLayout = new QHBoxLayout(this);
     _buttonAddProperty = new QPushButton(this);
+    _buttonAddProperty->setText("+");
     _buttonRemoveProperty = new QPushButton(this);
+    _buttonRemoveProperty->setText("-");
 
     _buttonsHLayout->addWidget(_buttonAddProperty);
     _buttonsHLayout->addWidget(_buttonRemoveProperty);
@@ -142,6 +144,7 @@ void Frame::setupUi()
     _deleteButtonHLayout = new QHBoxLayout();
     _deleteButtonHSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
     _buttonDeleteFrame = new QPushButton(this);
+    _buttonDeleteFrame->setText("-");
 
     _deleteButtonHLayout->addItem(_deleteButtonHSpacer);
     _deleteButtonHLayout->addWidget(_buttonDeleteFrame);
@@ -208,11 +211,7 @@ std::pair<QString, QString> Frame::getPropetryAndDescriptionByIndex(int index)
 void Frame::addDefaultItemsToComboBox()
 {
     QFile file(":/json/default_objects.json");
-    if (!file.open(QIODevice::ReadOnly))
-    {
-        qDebug() << "returned";
-        return;
-    }
+    if (!file.open(QIODevice::ReadOnly)) return;
     QByteArray jsonData = file.readAll();
     file.close();
 
