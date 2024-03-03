@@ -39,13 +39,20 @@ private slots:
 private:
     std::unique_ptr<Ui::MainWindow> _ui;
     bool _saved;
+    QString _destinationFileName;
 
     void closeEvent(QCloseEvent *event) override;
 
     void setupActions();
 
-    void createSaveChangesQuestionWindow();
+    void raiseSaveChangesQuestionWindow();
 
     void connectSlots();
+
+    QDialog* createFileDialog(QWidget* parent = nullptr);
+
+    QDialog* createQuestionDialog(QWidget* parent = nullptr);
+
+    QDialog* createVersionDialog(QWidget* parent = nullptr);
 };
 #endif // MAINWINDOW_H

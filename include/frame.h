@@ -49,8 +49,6 @@ private:
     QHBoxLayout* _deleteButtonHLayout;
     QSpacerItem* _deleteButtonHSpacer;
 
-    int layoutsCount = 0;
-
     void setupUi();
 
     void connectSlots();

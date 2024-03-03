@@ -5,7 +5,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , _ui(new Ui::MainWindow)
-    , _saved(true)
+    , _saved(true), _destinationFileName()
 {
     _ui->setupUi(this);
     this->setWindowTitle("unsaved.json");
@@ -56,10 +56,7 @@ void MainWindow::newActionSlot()
 
 void MainWindow::versionActionSlot()
 {
-    QDialog* versionDialog = new QDialog();
-    versionDialog->setAttribute(Qt::WA_DeleteOnClose);
-
-    versionDialog->setWindowTitle("Version");
+    auto versionDialog = createVersionDialog();
     versionDialog->exec();
 }
 
@@ -81,12 +78,34 @@ void MainWindow::setupActions()
     connect(_ui->actionVersion, &QAction::triggered, this, &MainWindow::versionActionSlot);
 }
 
-void MainWindow::createSaveChangesQuestionWindow()
+void MainWindow::raiseSaveChangesQuestionWindow()
 {
+    QDialog fileDialog(this);
+
 
 }
 
 void MainWindow::connectSlots()
 {
     connect(_ui->buttonAddFrame, &QPushButton::pressed, this, &MainWindow::createFrame);
+}
+
+QDialog* MainWindow::createFileDialog(QWidget* parent)
+{
+    return {};
+}
+
+QDialog* MainWindow::createQuestionDialog(QWidget* parent)
+{
+    return {};
+}
+
+QDialog* MainWindow::createVersionDialog(QWidget* parent)
+{
+    QDialog* versionDialog = new QDialog();
+    versionDialog->setAttribute(Qt::WA_DeleteOnClose);
+
+    versionDialog->setWindowTitle("Version");
+
+    return versionDialog;
 }
