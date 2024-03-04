@@ -2,8 +2,12 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QString>
+#include <QStringList>
 #include <QCloseEvent>
 #include <QDialog>
+#include <QFileDialog>
+#include <QMessageBox>
 #include <memory>
 #include "frame.h"
 
@@ -22,7 +26,7 @@ public:
     ~MainWindow();
 
 private slots:
-    void createFrame();
+    Frame* createFrame();
 
     void deleteFrame();
 
@@ -39,20 +43,27 @@ private slots:
 private:
     std::unique_ptr<Ui::MainWindow> _ui;
     bool _saved;
-    QString _destinationFileName;
+    QString _absolutePath;
 
     void closeEvent(QCloseEvent *event) override;
 
     void setupActions();
 
-    void raiseSaveChangesQuestionWindow();
-
     void connectSlots();
 
-    QDialog* createFileDialog(QWidget* parent = nullptr);
+    QFileDialog* createFileDialog(QWidget* parent = nullptr);
 
-    QDialog* createQuestionDialog(QWidget* parent = nullptr);
+    QMessageBox::StandardButton createQuestionMessageBox(QWidget* parent = nullptr);
 
-    QDialog* createVersionDialog(QWidget* parent = nullptr);
+    QMessageBox::StandardButton createVersionMessageBox(QWidget* parent = nullptr);
+
+    //Реализовать
+    void save(const QString& absolutePath);
+
+    void processUnsavedDocument();
+
+    void updateSavedStatus(bool status);
+
+    void clearFrames();
 };
 #endif // MAINWINDOW_H

@@ -41,6 +41,12 @@ void Frame::reInitializeFromJson(const QJsonObject& jsonObject)
     }
 }
 
+void Frame::setObjectName(const QString& objectName)
+{
+    _comboBox->setCurrentIndex(-1);
+    _comboBox->setCurrentText(objectName);
+}
+
 void Frame::forwardDeleteButtonPressed()
 {
     emit deleteSelf();
@@ -95,8 +101,8 @@ void Frame::changeComboBoxIndex(int index)
 void Frame::setupUi()
 {
     //Frame
-    this->setFrameShape(QFrame::StyledPanel);
-    this->setFrameShadow(QFrame::Raised);
+    this->setFrameShape(QFrame::WinPanel);
+    this->setFrameShadow(QFrame::Plain);
     _mainVLayout = new QVBoxLayout(this);
     _mainHLayout = new QHBoxLayout(this);
     _comboBox = new QComboBox(this);

@@ -23,6 +23,8 @@ public:
 
     void reInitializeFromJson(const QJsonObject& jsonObject);
 
+    void setObjectName(const QString& objectName);
+
 signals:
     void deleteSelf();
 
