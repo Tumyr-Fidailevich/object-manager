@@ -59,6 +59,8 @@ private:
 
     QMessageBox::StandardButton createVersionMessageBox(QWidget* parent = nullptr);
 
+    QMessageBox::StandardButton createErrorMessageBox(const QString& messageTitle, const QString& message, QWidget* parent = nullptr);
+
     bool save(const QString& absolutePath);
 
     QJsonObject open(const QString& absolutePath);

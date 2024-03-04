@@ -128,20 +128,26 @@ QFileDialog* MainWindow::createFileDialog(QWidget* parent)
     return fileDialog;
 }
 
-QMessageBox::StandardButton MainWindow::createQuestionMessageBox(QWidget* parent)
+QMessageBox::StandardButton MainWindow::createQuestionMessageBox()
 {
     return QMessageBox::question(this, "Question", "Do you want to save changes?",
                                       QMessageBox::Save | QMessageBox::Discard);
 }
 
-QMessageBox::StandardButton MainWindow::createVersionMessageBox(QWidget* parent)
+QMessageBox::StandardButton MainWindow::createVersionMessageBox()
 {
     return  QMessageBox::information(this, "Info", "Version 1.0");
+}
+
+QMessageBox::StandardButton MainWindow::createErrorMessageBox(const QString& messageTitle, const QString& message)
+{
+    return QMessageBox::critical(this, tr(messageTitle.toStdString().c_str()), tr(messageTitle.toStdString().c_str()));
 }
 
 bool MainWindow::save(const QString& absolutePath)
 {
     QJsonObject resultJsonObject;
+
     for(int i = 0; i < _ui->scrollAreaVLayout->count(); i++)
     {
         auto frame = qobject_cast<Frame*>(_ui->scrollAreaVLayout->itemAt(i)->widget());
@@ -167,12 +173,19 @@ QJsonObject MainWindow::open(const QString& absolutePath)
 {
     QFile file(_absolutePath);
 
-    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) return {};
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        createErrorMessageBox("Error", "Cannot open file");
+        return {};
+    }
     auto jsonData = file.readAll();
     file.close();
 
     auto jsonDocument = QJsonDocument::fromJson(jsonData);
-    if (jsonDocument.isNull()) return {};
+    if (jsonDocument.isNull()) {
+        createErrorMessageBox("Error", "Null json object");
+        return {};
+    }
 
     auto rootJsonObject = jsonDocument.object();
     return rootJsonObject;
