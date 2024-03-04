@@ -25,4 +25,5 @@ cmake --build .
 
 - **Undo-Redo Manager:**
   - Soon.
-  - File validation.
+- File validation.
+- More specific properties

@@ -1,0 +1,3 @@
+D:/QtProjects/object-manager/build/CMakeFiles/object-manager.dir
+D:/QtProjects/object-manager/build/CMakeFiles/ALL_BUILD.dir
+D:/QtProjects/object-manager/build/CMakeFiles/ZERO_CHECK.dir

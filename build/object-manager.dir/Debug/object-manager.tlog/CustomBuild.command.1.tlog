@@ -1,0 +1,42 @@
+^D:\QTPROJECTS\OBJECT-MANAGER\BUILD\CMAKEFILES\479121DD56340631EB5A8B1AF5F16803\AUTOUIC_(CONFIG).STAMP.RULE
+setlocal
+cd D:\QtProjects\object-manager\build
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\QTPROJECTS\OBJECT-MANAGER\BUILD\CMAKEFILES\5F6EFF52ACBF806A93D4A50634D9AA2F\QRC_RESOURCES.CPP.RULE
+setlocal
+cd D:\QtProjects\object-manager\build
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E cmake_autorcc D:/QtProjects/object-manager/build/CMakeFiles/object-manager_autogen.dir/AutoRcc_resources_3YJK5W5UP7_Info.json Debug
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E cmake_autorcc D:/QtProjects/object-manager/build/CMakeFiles/object-manager_autogen.dir/AutoRcc_resources_3YJK5W5UP7_Info.json Release
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E cmake_autorcc D:/QtProjects/object-manager/build/CMakeFiles/object-manager_autogen.dir/AutoRcc_resources_3YJK5W5UP7_Info.json MinSizeRel
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E cmake_autorcc D:/QtProjects/object-manager/build/CMakeFiles/object-manager_autogen.dir/AutoRcc_resources_3YJK5W5UP7_Info.json RelWithDebInfo
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\QTPROJECTS\OBJECT-MANAGER\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/QtProjects/object-manager -BD:/QtProjects/object-manager/build --check-stamp-file D:/QtProjects/object-manager/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

@@ -1,0 +1,35 @@
+{
+	"BUILD_DIR" : "D:/QtProjects/object-manager/build/object-manager_autogen",
+	"CMAKE_BINARY_DIR" : "D:/QtProjects/object-manager/build",
+	"CMAKE_CURRENT_BINARY_DIR" : "D:/QtProjects/object-manager/build",
+	"CMAKE_CURRENT_SOURCE_DIR" : "D:/QtProjects/object-manager",
+	"CMAKE_SOURCE_DIR" : "D:/QtProjects/object-manager",
+	"INCLUDE_DIR" : "D:/QtProjects/object-manager/build/object-manager_autogen/include",
+	"INCLUDE_DIR_Debug" : "D:/QtProjects/object-manager/build/object-manager_autogen/include_Debug",
+	"INCLUDE_DIR_MinSizeRel" : "D:/QtProjects/object-manager/build/object-manager_autogen/include_MinSizeRel",
+	"INCLUDE_DIR_RelWithDebInfo" : "D:/QtProjects/object-manager/build/object-manager_autogen/include_RelWithDebInfo",
+	"INCLUDE_DIR_Release" : "D:/QtProjects/object-manager/build/object-manager_autogen/include_Release",
+	"INPUTS" : 
+	[
+		"D:/QtProjects/object-manager/resources/default_objects.json",
+		"D:/QtProjects/object-manager/resources/help.png",
+		"D:/QtProjects/object-manager/resources/save.png",
+		"D:/QtProjects/object-manager/resources/save_as.png",
+		"D:/QtProjects/object-manager/resources/qt_new.png",
+		"D:/QtProjects/object-manager/resources/qt_open.png"
+	],
+	"LOCK_FILE" : "D:/QtProjects/object-manager/build/CMakeFiles/object-manager_autogen.dir/AutoRcc_resources_3YJK5W5UP7_Lock.lock",
+	"MULTI_CONFIG" : true,
+	"OPTIONS" : [ "-name", "resources" ],
+	"OUTPUT_CHECKSUM" : "3YJK5W5UP7",
+	"OUTPUT_NAME" : "qrc_resources.cpp",
+	"RCC_EXECUTABLE" : "D:/Qt/6.6.0/msvc2019_64/./bin/rcc.exe",
+	"RCC_LIST_OPTIONS" : [ "--list" ],
+	"SETTINGS_FILE" : "D:/QtProjects/object-manager/build/CMakeFiles/object-manager_autogen.dir/AutoRcc_resources_3YJK5W5UP7_Used.txt",
+	"SETTINGS_FILE_Debug" : "D:/QtProjects/object-manager/build/CMakeFiles/object-manager_autogen.dir/AutoRcc_resources_3YJK5W5UP7_Used_Debug.txt",
+	"SETTINGS_FILE_MinSizeRel" : "D:/QtProjects/object-manager/build/CMakeFiles/object-manager_autogen.dir/AutoRcc_resources_3YJK5W5UP7_Used_MinSizeRel.txt",
+	"SETTINGS_FILE_RelWithDebInfo" : "D:/QtProjects/object-manager/build/CMakeFiles/object-manager_autogen.dir/AutoRcc_resources_3YJK5W5UP7_Used_RelWithDebInfo.txt",
+	"SETTINGS_FILE_Release" : "D:/QtProjects/object-manager/build/CMakeFiles/object-manager_autogen.dir/AutoRcc_resources_3YJK5W5UP7_Used_Release.txt",
+	"SOURCE" : "D:/QtProjects/object-manager/resources/resources.qrc",
+	"VERBOSITY" : 0
+}
