@@ -71,15 +71,21 @@ void MainWindow::openActionSlot()
     if(!_absolutePath.isEmpty())
     {
         auto rootJsonObject = open(_absolutePath);
+        if(rootJsonObject.isEmpty() || !rootJsonObject.contains("version"))
+        {
+            updateSavedStatus(false);
+            return;
+        }
+
         for(auto it = rootJsonObject.begin(); it != rootJsonObject.end(); it++)
         {
+            if(it.key() == "version") continue;
             auto objectName = it.key();
             auto propertyObject = it->toObject()["Property"].toObject();
             auto newFrame = createFrame();
             newFrame->reInitializeFromJson(propertyObject);
             newFrame->setObjectName(objectName);
         }
-
         updateSavedStatus(true);
     }
 }
@@ -193,7 +199,6 @@ QJsonObject MainWindow::open(const QString& absolutePath)
 
 void MainWindow::updateSavedStatus(bool saved)
 {
-
     if(saved)
     {
         this->setWindowTitle(QFileInfo(_absolutePath).fileName());
