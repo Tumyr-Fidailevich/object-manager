@@ -20,6 +20,8 @@ Frame* MainWindow::createFrame()
     auto newFrame = new Frame(this);
 
     connect(newFrame, &Frame::deleteSelf, this, &MainWindow::deleteFrame);
+    connect(newFrame, &Frame::textChanged, this, &MainWindow::updateSavedStatus);
+    connect(newFrame, &Frame::changeProperties, this, &MainWindow::updateSavedStatus);
 
     updateSavedStatus(false);
 

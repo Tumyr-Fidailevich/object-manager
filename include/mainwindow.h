@@ -40,6 +40,8 @@ private slots:
 
     void versionActionSlot();
 
+    void updateSavedStatus(bool status);
+
 private:
     std::unique_ptr<Ui::MainWindow> _ui;
     bool _saved;
@@ -62,8 +64,6 @@ private:
     QJsonObject open(const QString& absolutePath);
 
     void processUnsavedDocument();
-
-    void updateSavedStatus(bool status);
 
     void clearFrames();
 

@@ -28,8 +28,14 @@ public:
 signals:
     void deleteSelf();
 
+    void textChanged(bool);
+
+    void changeProperties(bool);
+
 private slots:
     void forwardDeleteButtonPressed();
+
+    void forwardTextChanged();
 
     void addProperty();
 
@@ -59,7 +65,7 @@ private:
 
     void clearPropertiesAndDescriptionsLayouts();
 
-    void addNewPropertyAndDescription(QLineEdit* propertyLineEdit, QLineEdit* descriptionLineEdit);
+    void push_backProperty(QLineEdit* propertyLineEdit, QLineEdit* descriptionLineEdit);
 
     std::pair<QString, QString> getPropetryAndDescriptionByIndex(int index);
 

@@ -34,10 +34,12 @@ void Frame::reInitializeFromJson(const QJsonObject& jsonObject)
         auto propertyLineEdit = new QLineEdit(this);
         auto descriptionLineEdit = new QLineEdit(this);
 
+        connect(propertyLineEdit, &QLineEdit::textChanged, this, &Frame::forwardTextChanged);
+        connect(descriptionLineEdit, &QLineEdit::textChanged, this, &Frame::forwardTextChanged);
         propertyLineEdit->setText(key);
         descriptionLineEdit->setText(value);
 
-        addNewPropertyAndDescription(propertyLineEdit, descriptionLineEdit);
+        push_backProperty(propertyLineEdit, descriptionLineEdit);
     }
 }
 
@@ -52,11 +54,19 @@ void Frame::forwardDeleteButtonPressed()
     emit deleteSelf();
 }
 
+void Frame::forwardTextChanged()
+{
+    emit textChanged(false);
+}
+
 void Frame::addProperty()
 {
     QLineEdit* newProperty = new QLineEdit(this);
     QLineEdit* newDescription = new QLineEdit(this);
-    addNewPropertyAndDescription(newProperty, newDescription);
+    connect(newProperty, &QLineEdit::textChanged, this, &Frame::forwardTextChanged);
+    connect(newDescription, &QLineEdit::textChanged, this, &Frame::forwardTextChanged);
+    push_backProperty(newProperty, newDescription);
+    emit changeProperties(false);
 }
 
 void Frame::removeProperty()
@@ -78,6 +88,7 @@ void Frame::removeProperty()
         delete propertyItemToRemove;
         delete descriptionItemToRemove;
     }
+    emit changeProperties(false);
 }
 
 void Frame::changeComboBoxIndex(int index)
@@ -121,6 +132,7 @@ void Frame::setupUi()
     _propertyVLayout = new QVBoxLayout(this);
     _propertyVLayout->setSizeConstraint(QLayout::SetMinimumSize);
     auto propertyLineEdit  = new QLineEdit(this);
+    connect(propertyLineEdit, &QLineEdit::textChanged, this, &Frame::forwardTextChanged);
     QSizePolicy lineEditSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
     lineEditSizePolicy.setHorizontalStretch(0);
     lineEditSizePolicy.setVerticalStretch(0);
@@ -144,6 +156,7 @@ void Frame::setupUi()
     //DescriptionLayout
     _descriptionVLayout = new QVBoxLayout();
     auto descriptionLineEdit = new QLineEdit();
+    connect(descriptionLineEdit, &QLineEdit::textChanged, this, &Frame::forwardTextChanged);
     _descriptionVLayout->addWidget(descriptionLineEdit);
     _descriptionHLayout = new QHBoxLayout();
     _descriptionVLayout->addLayout(_descriptionHLayout);
@@ -170,9 +183,10 @@ void Frame::setupUi()
 void Frame::connectSlots()
 {
     connect(_buttonAddProperty, &QPushButton::pressed, this, &Frame::addProperty);
-    connect(_buttonRemoveProperty, &QPushButton::pressed, this, &Frame::removeProperty);
+    connect(_buttonRemoveProperty, &QPushButton::pressed, this, &Frame::addProperty);
     connect(_buttonDeleteFrame, &QPushButton::pressed, this, &Frame::forwardDeleteButtonPressed);
     connect(_comboBox, &QComboBox::activated, this, &Frame::changeComboBoxIndex);
+    connect(_comboBox, &QComboBox::currentTextChanged, this, &Frame::forwardTextChanged);
 }
 
 void Frame::clearPropertiesAndDescriptionsLayouts()
@@ -194,7 +208,7 @@ void Frame::clearPropertiesAndDescriptionsLayouts()
     }
 }
 
-void Frame::addNewPropertyAndDescription(QLineEdit* propertyLineEdit, QLineEdit* descriptionLineEdit)
+void Frame::push_backProperty(QLineEdit* propertyLineEdit, QLineEdit* descriptionLineEdit)
 {
     int widgetsCount = _propertyVLayout->count();
     int index = widgetsCount > 1 ?  widgetsCount - 1 : 0;
