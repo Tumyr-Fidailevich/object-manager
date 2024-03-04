@@ -57,13 +57,16 @@ private:
 
     QMessageBox::StandardButton createVersionMessageBox(QWidget* parent = nullptr);
 
-    //Реализовать
     void save(const QString& absolutePath);
+
+    QJsonObject open(const QString& absolutePath);
 
     void processUnsavedDocument();
 
     void updateSavedStatus(bool status);
 
     void clearFrames();
+
+    QString getDestinationFilePathByQuestionWindow();
 };
 #endif // MAINWINDOW_H

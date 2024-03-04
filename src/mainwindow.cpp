@@ -40,67 +40,52 @@ void MainWindow::deleteFrame()
 
 void MainWindow::saveActionSlot()
 {
-    if(_absolutePath.isEmpty())
-        processUnsavedDocument();
-    else
-        save(_absolutePath);
-    updateSavedStatus(true);
+    if(!_saved)
+    {
+        if(_absolutePath.isEmpty()) _absolutePath = getDestinationFilePathByQuestionWindow();
+
+        if(!_absolutePath.isEmpty())
+        {
+            save(_absolutePath);
+            updateSavedStatus(true);
+        }
+    }
 }
 
 void MainWindow::saveAsActionSlot()
 {
-    auto fileDialog = createFileDialog();
-    fileDialog->exec();
-
-    auto selectedFiles = fileDialog->selectedFiles();
-    if(selectedFiles.isEmpty()) return;
-    auto selectedFile = selectedFiles.first();
-    QFileInfo fileInfo(selectedFile);
-
-    auto absolutePath = fileInfo.absoluteFilePath();
+    auto absolutePath = getDestinationFilePathByQuestionWindow();
     save(absolutePath);
-
-    if(_absolutePath.isEmpty()) {
-        _absolutePath = absolutePath;
-        qDebug() << "absolutePath: " << _absolutePath;
-        updateSavedStatus(true);
-    }
 }
 
 
 void MainWindow::openActionSlot()
 {
-    if(!_ui->scrollAreaVLayout->isEmpty()) processUnsavedDocument();
+    saveActionSlot();
 
     clearFrames();
 
-    QFile file(_absolutePath);
+    auto _absolutePath = getDestinationFilePathByQuestionWindow();
 
-    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) return;
-    auto jsonData = file.readAll();
-    file.close();
-
-    auto jsonDocument = QJsonDocument::fromJson(jsonData);
-    if (jsonDocument.isNull()) return;
-
-    auto rootJsonObject = jsonDocument.object();
-    qDebug() << "Root json object" << rootJsonObject;
-    for(auto it = rootJsonObject.begin(); it != rootJsonObject.end(); it++)
+    if(!_absolutePath.isEmpty())
     {
-        qDebug() << "Object: " << it->isObject();
-        auto objectName = it.key();
-        auto propertyObject = it->toObject()["Property"].toObject();
-        auto newFrame = createFrame();
-        newFrame->reInitializeFromJson(propertyObject);
-        newFrame->setObjectName(objectName);
-    }
+        auto rootJsonObject = open(_absolutePath);
+        for(auto it = rootJsonObject.begin(); it != rootJsonObject.end(); it++)
+        {
+            auto objectName = it.key();
+            auto propertyObject = it->toObject()["Property"].toObject();
+            auto newFrame = createFrame();
+            newFrame->reInitializeFromJson(propertyObject);
+            newFrame->setObjectName(objectName);
+        }
 
-    updateSavedStatus(true);
+        updateSavedStatus(true);
+    }
 }
 
 void MainWindow::newActionSlot()
 {
-    if(!_saved) processUnsavedDocument();
+    saveActionSlot();
     clearFrames();
     _absolutePath.clear();
     updateSavedStatus(false);
@@ -113,7 +98,7 @@ void MainWindow::versionActionSlot()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    if(!_saved) processUnsavedDocument();
+    saveActionSlot();
     event->accept();
 }
 
@@ -176,20 +161,19 @@ void MainWindow::save(const QString& absolutePath)
     file.close();
 }
 
-void MainWindow::processUnsavedDocument()
+QJsonObject MainWindow::open(const QString& absolutePath)
 {
-    if(_absolutePath.isEmpty())
-    {
-        saveAsActionSlot();
-    }
-    else
-    {
-        auto questionResult = createQuestionMessageBox();
-        if(questionResult == QMessageBox::Save)
-        {
-            save(_absolutePath);
-        }
-    }
+    QFile file(_absolutePath);
+
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) return {};
+    auto jsonData = file.readAll();
+    file.close();
+
+    auto jsonDocument = QJsonDocument::fromJson(jsonData);
+    if (jsonDocument.isNull()) return {};
+
+    auto rootJsonObject = jsonDocument.object();
+    return rootJsonObject;
 }
 
 void MainWindow::updateSavedStatus(bool saved)
@@ -221,4 +205,17 @@ void MainWindow::clearFrames()
         }
         delete itemToRemove;
     }
+}
+
+QString MainWindow::getDestinationFilePathByQuestionWindow()
+{
+    auto fileDialog = createFileDialog();
+    fileDialog->exec();
+
+    auto selectedFiles = fileDialog->selectedFiles();
+    if(selectedFiles.isEmpty()) return {};
+    auto selectedFile = selectedFiles.first();
+    QFileInfo fileInfo(selectedFile);
+
+    return fileInfo.absoluteFilePath();
 }
