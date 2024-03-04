@@ -46,8 +46,7 @@ void MainWindow::saveActionSlot()
 
         if(!_absolutePath.isEmpty())
         {
-            save(_absolutePath);
-            updateSavedStatus(true);
+            updateSavedStatus(save(_absolutePath));
         }
     }
 }
@@ -138,7 +137,7 @@ QMessageBox::StandardButton MainWindow::createVersionMessageBox(QWidget* parent)
     return  QMessageBox::information(this, "Info", "Version 1.0");
 }
 
-void MainWindow::save(const QString& absolutePath)
+bool MainWindow::save(const QString& absolutePath)
 {
     QJsonObject resultJsonObject;
     for(int i = 0; i < _ui->scrollAreaVLayout->count(); i++)
@@ -152,13 +151,14 @@ void MainWindow::save(const QString& absolutePath)
 
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         qDebug() << "Cannot create file:" << absolutePath;
-        return;
+        return false;
     }
 
     QJsonDocument jsonDocument(resultJsonObject);
 
     file.write(jsonDocument.toJson());
     file.close();
+    return true;
 }
 
 QJsonObject MainWindow::open(const QString& absolutePath)
