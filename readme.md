@@ -21,7 +21,8 @@
 cmake --build .
 ```
 
-## Features
+## Features/bugs
 
 - **Undo-Redo Manager:**
   - Soon.
+  - File validation.
