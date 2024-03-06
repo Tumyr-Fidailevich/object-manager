@@ -42,7 +42,7 @@ void MainWindow::deleteFrame()
 
 void MainWindow::saveActionSlot()
 {
-    if(!_saved)
+    if(!_saved && !_ui->scrollAreaVLayout->isEmpty())
     {
         if(_absolutePath.isEmpty()) _absolutePath = getDestinationFilePathByQuestionWindow();
 

@@ -55,11 +55,11 @@ private:
 
     QFileDialog* createFileDialog(QWidget* parent = nullptr);
 
-    QMessageBox::StandardButton createQuestionMessageBox(QWidget* parent = nullptr);
+    QMessageBox::StandardButton createQuestionMessageBox();
 
-    QMessageBox::StandardButton createVersionMessageBox(QWidget* parent = nullptr);
+    QMessageBox::StandardButton createVersionMessageBox();
 
-    QMessageBox::StandardButton createErrorMessageBox(const QString& messageTitle, const QString& message, QWidget* parent = nullptr);
+    QMessageBox::StandardButton createErrorMessageBox(const QString& messageTitle, const QString& message);
 
     bool save(const QString& absolutePath);
 
