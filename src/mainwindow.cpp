@@ -79,6 +79,8 @@ void MainWindow::openActionSlot()
 
     auto _absolutePath = getDestinationFilePathByQuestionWindow("Choose file to open", QFileDialog::AcceptOpen);
 
+    qDebug() << _absolutePath;
+
     if(!_absolutePath.isEmpty())
     {
         clearFrames();
@@ -189,6 +191,8 @@ bool MainWindow::save(const QString& absolutePath)
         auto frameJson = frame->createJsonDump();
         resultJsonObject[frameJson.keys().constFirst()] = frameJson.value(frameJson.keys().constFirst());
     }
+
+    resultJsonObject["version"] = 1.0;
 
     QFile file(absolutePath);
 
