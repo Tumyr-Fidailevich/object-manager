@@ -44,7 +44,7 @@ void MainWindow::saveActionSlot()
 {
     if(!_saved)
     {
-        if(_absolutePath.isEmpty()) _absolutePath = getDestinationFilePathByQuestionWindow("Choose file to save");
+        if(_absolutePath.isEmpty()) _absolutePath = getDestinationFilePathByQuestionWindow("Choose file to save", QFileDialog::AcceptSave);
 
         if(!_absolutePath.isEmpty())
         {
@@ -55,7 +55,7 @@ void MainWindow::saveActionSlot()
 
 void MainWindow::saveAsActionSlot()
 {
-    auto absolutePath = getDestinationFilePathByQuestionWindow("Choose file to save");
+    auto absolutePath = getDestinationFilePathByQuestionWindow("Choose file to save", QFileDialog::AcceptSave);
     save(absolutePath);
 }
 
@@ -68,7 +68,7 @@ void MainWindow::openActionSlot()
 
         if(questionResult != QMessageBox::Save)
         {
-            if(_absolutePath.isEmpty()) _absolutePath = getDestinationFilePathByQuestionWindow("Choose file to save");
+            if(_absolutePath.isEmpty()) _absolutePath = getDestinationFilePathByQuestionWindow("Choose file to save", QFileDialog::AcceptSave);
 
             if(!_absolutePath.isEmpty())
             {
@@ -77,7 +77,7 @@ void MainWindow::openActionSlot()
         }
     }
 
-    auto _absolutePath = getDestinationFilePathByQuestionWindow("Choose file to open");
+    auto _absolutePath = getDestinationFilePathByQuestionWindow("Choose file to open", QFileDialog::AcceptOpen);
 
     if(!_absolutePath.isEmpty())
     {
@@ -111,7 +111,7 @@ void MainWindow::newActionSlot()
 
         if(questionResult != QMessageBox::Save)
         {
-            if(_absolutePath.isEmpty()) _absolutePath = getDestinationFilePathByQuestionWindow("Choose file to save");
+            if(_absolutePath.isEmpty()) _absolutePath = getDestinationFilePathByQuestionWindow("Choose file to save", QFileDialog::AcceptSave);
 
             if(!_absolutePath.isEmpty())
             {
@@ -153,11 +153,11 @@ void MainWindow::connectSlots()
     connect(_ui->buttonAddFrame, &QPushButton::pressed, this, &MainWindow::createFrame);
 }
 
-QFileDialog* MainWindow::createFileDialog(const QString& title, QWidget* parent)
+QFileDialog* MainWindow::createFileDialog(const QString& title, QFileDialog::AcceptMode acceptMode, QWidget* parent)
 {
     auto fileDialog = new QFileDialog(parent);
     fileDialog->setWindowTitle(title);
-    fileDialog->setAcceptMode(QFileDialog::AcceptSave);
+    fileDialog->setAcceptMode(acceptMode);
     fileDialog->setNameFilter("JSON files (*.json)");
     fileDialog->setDefaultSuffix("json");
     return fileDialog;
@@ -256,9 +256,9 @@ void MainWindow::clearFrames()
     }
 }
 
-QString MainWindow::getDestinationFilePathByQuestionWindow(const QString& title)
+QString MainWindow::getDestinationFilePathByQuestionWindow(const QString& title, QFileDialog::AcceptMode acceptMode)
 {
-    auto fileDialog = createFileDialog(title);
+    auto fileDialog = createFileDialog(title, acceptMode);
     fileDialog->exec();
 
     auto selectedFiles = fileDialog->selectedFiles();

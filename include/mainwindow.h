@@ -53,7 +53,7 @@ private:
 
     void connectSlots();
 
-    QFileDialog* createFileDialog(const QString& title, QWidget* parent = nullptr);
+    QFileDialog* createFileDialog(const QString& title, QFileDialog::AcceptMode acceptMode, QWidget* parent = nullptr);
 
     QMessageBox::StandardButton createQuestionMessageBox();
 
@@ -69,6 +69,6 @@ private:
 
     void clearFrames();
 
-    QString getDestinationFilePathByQuestionWindow(const QString& title);
+    QString getDestinationFilePathByQuestionWindow(const QString& title, QFileDialog::AcceptMode acceptMode);
 };
 #endif // MAINWINDOW_H
