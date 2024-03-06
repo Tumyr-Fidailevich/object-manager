@@ -53,7 +53,7 @@ private:
 
     void connectSlots();
 
-    QFileDialog* createFileDialog(QWidget* parent = nullptr);
+    QFileDialog* createFileDialog(const QString& title, QWidget* parent = nullptr);
 
     QMessageBox::StandardButton createQuestionMessageBox();
 

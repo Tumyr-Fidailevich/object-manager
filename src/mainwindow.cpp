@@ -123,14 +123,13 @@ void MainWindow::connectSlots()
     connect(_ui->buttonAddFrame, &QPushButton::pressed, this, &MainWindow::createFrame);
 }
 
-QFileDialog* MainWindow::createFileDialog(QWidget* parent)
+QFileDialog* MainWindow::createFileDialog(const QString& title, QWidget* parent)
 {
     auto fileDialog = new QFileDialog(parent);
-    fileDialog->setWindowTitle("Выберите файл JSON");
+    fileDialog->setWindowTitle(title);
     fileDialog->setAcceptMode(QFileDialog::AcceptSave);
-    fileDialog->setNameFilter("JSON файлы (*.json)");
+    fileDialog->setNameFilter("JSON files (*.json)");
     fileDialog->setDefaultSuffix("json");
-
     return fileDialog;
 }
 
