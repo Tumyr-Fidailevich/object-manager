@@ -62,7 +62,7 @@ void MainWindow::saveAsActionSlot()
 
 void MainWindow::openActionSlot()
 {
-    if(!_saved && !_ui->scrollAreaVLayout->isEmpty())
+    if(!_saved)
     {
         auto questionResult = createQuestionMessageBox();
 
@@ -176,7 +176,7 @@ bool MainWindow::save(const QString& absolutePath)
     QFile file(absolutePath);
 
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        qDebug() << "Cannot create file:" << absolutePath;
+        createErrorMessageBox("Error", "Cannot open file");
         return false;
     }
 
