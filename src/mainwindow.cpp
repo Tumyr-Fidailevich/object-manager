@@ -66,22 +66,22 @@ void MainWindow::openActionSlot()
     {
         auto questionResult = createQuestionMessageBox();
 
-        if(questionResult != QMessageBox::Save) return;
-
-        if(_absolutePath.isEmpty()) _absolutePath = getDestinationFilePathByQuestionWindow("Choose file to save");
-
-        if(!_absolutePath.isEmpty())
+        if(questionResult != QMessageBox::Save)
         {
-            updateSavedStatus(save(_absolutePath));
+            if(_absolutePath.isEmpty()) _absolutePath = getDestinationFilePathByQuestionWindow("Choose file to save");
+
+            if(!_absolutePath.isEmpty())
+            {
+                updateSavedStatus(save(_absolutePath));
+            }
         }
     }
-
-    clearFrames();
 
     auto _absolutePath = getDestinationFilePathByQuestionWindow("Choose file to open");
 
     if(!_absolutePath.isEmpty())
     {
+        clearFrames();
         auto rootJsonObject = open(_absolutePath);
         if(rootJsonObject.isEmpty() || !rootJsonObject.contains("version"))
         {
@@ -109,13 +109,14 @@ void MainWindow::newActionSlot()
     {
         auto questionResult = createQuestionMessageBox();
 
-        if(questionResult != QMessageBox::Save) return;
-
-        if(_absolutePath.isEmpty()) _absolutePath = getDestinationFilePathByQuestionWindow("Choose file to save");
-
-        if(!_absolutePath.isEmpty())
+        if(questionResult != QMessageBox::Save)
         {
-            updateSavedStatus(save(_absolutePath));
+            if(_absolutePath.isEmpty()) _absolutePath = getDestinationFilePathByQuestionWindow("Choose file to save");
+
+            if(!_absolutePath.isEmpty())
+            {
+                updateSavedStatus(save(_absolutePath));
+            }
         }
     }
 
