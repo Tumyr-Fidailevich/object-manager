@@ -105,10 +105,26 @@ void MainWindow::openActionSlot()
 
 void MainWindow::newActionSlot()
 {
-    saveActionSlot();
+    if(!_saved)
+    {
+        auto questionResult = createQuestionMessageBox();
+
+        if(questionResult != QMessageBox::Save) return;
+
+        if(_absolutePath.isEmpty()) _absolutePath = getDestinationFilePathByQuestionWindow("Choose file to save");
+
+        if(!_absolutePath.isEmpty())
+        {
+            updateSavedStatus(save(_absolutePath));
+        }
+    }
+
     clearFrames();
+
     _absolutePath.clear();
+
     updateSavedStatus(false);
+
 }
 
 void MainWindow::versionActionSlot()
