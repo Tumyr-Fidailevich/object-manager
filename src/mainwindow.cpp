@@ -5,10 +5,10 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , _ui(new Ui::MainWindow)
-    , _saved(false), _absolutePath()
+    , _absolutePath()
 {
     _ui->setupUi(this);
-    this->setWindowTitle("*unsaved.json");
+    updateSavedStatus(false);
     setupActions();
     connectSlots();
 }
@@ -77,9 +77,7 @@ void MainWindow::openActionSlot()
         }
     }
 
-    auto _absolutePath = getDestinationFilePathByQuestionWindow("Choose file to open", QFileDialog::AcceptOpen);
-
-    qDebug() << _absolutePath;
+    _absolutePath = getDestinationFilePathByQuestionWindow("Choose file to open", QFileDialog::AcceptOpen);
 
     if(!_absolutePath.isEmpty())
     {
