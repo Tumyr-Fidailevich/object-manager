@@ -135,7 +135,20 @@ void MainWindow::versionActionSlot()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    saveActionSlot();
+    if(!_saved)
+    {
+        auto questionResult = createQuestionMessageBox();
+
+        if(questionResult == QMessageBox::Save)
+        {
+            if(_absolutePath.isEmpty()) _absolutePath = getDestinationFilePathByQuestionWindow("Choose file to save", QFileDialog::AcceptSave);
+
+            if(!_absolutePath.isEmpty())
+            {
+                updateSavedStatus(save(_absolutePath));
+            }
+        }
+    }
     event->accept();
 }
 
