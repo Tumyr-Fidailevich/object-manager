@@ -5,10 +5,10 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , _ui(new Ui::MainWindow)
-    , _saved(false), _absolutePath()
+    , _absolutePath()
 {
     _ui->setupUi(this);
-    this->setWindowTitle("*unsaved.json");
+    updateSavedStatus(false);
     setupActions();
     connectSlots();
 }
@@ -44,7 +44,7 @@ void MainWindow::saveActionSlot()
 {
     if(!_saved)
     {
-        if(_absolutePath.isEmpty()) _absolutePath = getDestinationFilePathByQuestionWindow();
+        if(_absolutePath.isEmpty()) _absolutePath = getDestinationFilePathByQuestionWindow("Choose file to save", QFileDialog::AcceptSave);
 
         if(!_absolutePath.isEmpty())
         {
@@ -55,41 +55,77 @@ void MainWindow::saveActionSlot()
 
 void MainWindow::saveAsActionSlot()
 {
-    auto absolutePath = getDestinationFilePathByQuestionWindow();
+    auto absolutePath = getDestinationFilePathByQuestionWindow("Choose file to save", QFileDialog::AcceptSave);
     save(absolutePath);
 }
 
 
 void MainWindow::openActionSlot()
 {
-    saveActionSlot();
+    if(!_saved)
+    {
+        auto questionResult = createQuestionMessageBox();
 
-    clearFrames();
+        if(questionResult == QMessageBox::Save)
+        {
+            if(_absolutePath.isEmpty()) _absolutePath = getDestinationFilePathByQuestionWindow("Choose file to save", QFileDialog::AcceptSave);
 
-    auto _absolutePath = getDestinationFilePathByQuestionWindow();
+            if(!_absolutePath.isEmpty())
+            {
+                updateSavedStatus(save(_absolutePath));
+            }
+        }
+    }
+
+    _absolutePath = getDestinationFilePathByQuestionWindow("Choose file to open", QFileDialog::AcceptOpen);
 
     if(!_absolutePath.isEmpty())
     {
+        clearFrames();
         auto rootJsonObject = open(_absolutePath);
+        if(rootJsonObject.isEmpty() || !rootJsonObject.contains("version"))
+        {
+            _absolutePath.clear();
+            updateSavedStatus(false);
+            return;
+        }
+
         for(auto it = rootJsonObject.begin(); it != rootJsonObject.end(); it++)
         {
+            if(it.key() == "version") continue;
             auto objectName = it.key();
             auto propertyObject = it->toObject()["Property"].toObject();
             auto newFrame = createFrame();
             newFrame->reInitializeFromJson(propertyObject);
             newFrame->setObjectName(objectName);
         }
-
         updateSavedStatus(true);
     }
 }
 
 void MainWindow::newActionSlot()
 {
-    saveActionSlot();
+    if(!_saved)
+    {
+        auto questionResult = createQuestionMessageBox();
+
+        if(questionResult == QMessageBox::Save)
+        {
+            if(_absolutePath.isEmpty()) _absolutePath = getDestinationFilePathByQuestionWindow("Choose file to save", QFileDialog::AcceptSave);
+
+            if(!_absolutePath.isEmpty())
+            {
+                updateSavedStatus(save(_absolutePath));
+            }
+        }
+    }
+
     clearFrames();
+
     _absolutePath.clear();
+
     updateSavedStatus(false);
+
 }
 
 void MainWindow::versionActionSlot()
@@ -99,7 +135,20 @@ void MainWindow::versionActionSlot()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    saveActionSlot();
+    if(!_saved)
+    {
+        auto questionResult = createQuestionMessageBox();
+
+        if(questionResult == QMessageBox::Save)
+        {
+            if(_absolutePath.isEmpty()) _absolutePath = getDestinationFilePathByQuestionWindow("Choose file to save", QFileDialog::AcceptSave);
+
+            if(!_absolutePath.isEmpty())
+            {
+                updateSavedStatus(save(_absolutePath));
+            }
+        }
+    }
     event->accept();
 }
 
@@ -117,31 +166,36 @@ void MainWindow::connectSlots()
     connect(_ui->buttonAddFrame, &QPushButton::pressed, this, &MainWindow::createFrame);
 }
 
-QFileDialog* MainWindow::createFileDialog(QWidget* parent)
+QFileDialog* MainWindow::createFileDialog(const QString& title, QFileDialog::AcceptMode acceptMode, QWidget* parent)
 {
     auto fileDialog = new QFileDialog(parent);
-    fileDialog->setWindowTitle("Выберите файл JSON");
-    fileDialog->setAcceptMode(QFileDialog::AcceptSave);
-    fileDialog->setNameFilter("JSON файлы (*.json)");
+    fileDialog->setWindowTitle(title);
+    fileDialog->setAcceptMode(acceptMode);
+    fileDialog->setNameFilter("JSON files (*.json)");
     fileDialog->setDefaultSuffix("json");
-
     return fileDialog;
 }
 
-QMessageBox::StandardButton MainWindow::createQuestionMessageBox(QWidget* parent)
+QMessageBox::StandardButton MainWindow::createQuestionMessageBox()
 {
     return QMessageBox::question(this, "Question", "Do you want to save changes?",
                                       QMessageBox::Save | QMessageBox::Discard);
 }
 
-QMessageBox::StandardButton MainWindow::createVersionMessageBox(QWidget* parent)
+QMessageBox::StandardButton MainWindow::createVersionMessageBox()
 {
     return  QMessageBox::information(this, "Info", "Version 1.0");
+}
+
+QMessageBox::StandardButton MainWindow::createErrorMessageBox(const QString& messageTitle, const QString& message)
+{
+    return QMessageBox::critical(this, tr(messageTitle.toStdString().c_str()), tr(messageTitle.toStdString().c_str()));
 }
 
 bool MainWindow::save(const QString& absolutePath)
 {
     QJsonObject resultJsonObject;
+
     for(int i = 0; i < _ui->scrollAreaVLayout->count(); i++)
     {
         auto frame = qobject_cast<Frame*>(_ui->scrollAreaVLayout->itemAt(i)->widget());
@@ -149,10 +203,12 @@ bool MainWindow::save(const QString& absolutePath)
         resultJsonObject[frameJson.keys().constFirst()] = frameJson.value(frameJson.keys().constFirst());
     }
 
+    resultJsonObject["version"] = 1.0;
+
     QFile file(absolutePath);
 
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        qDebug() << "Cannot create file:" << absolutePath;
+        createErrorMessageBox("Error", "Cannot open file");
         return false;
     }
 
@@ -165,14 +221,21 @@ bool MainWindow::save(const QString& absolutePath)
 
 QJsonObject MainWindow::open(const QString& absolutePath)
 {
-    QFile file(_absolutePath);
+    QFile file(absolutePath);
 
-    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) return {};
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        createErrorMessageBox("Error", "Cannot open file");
+        return {};
+    }
     auto jsonData = file.readAll();
     file.close();
 
     auto jsonDocument = QJsonDocument::fromJson(jsonData);
-    if (jsonDocument.isNull()) return {};
+    if (jsonDocument.isNull()) {
+        createErrorMessageBox("Error", "Null json object");
+        return {};
+    }
 
     auto rootJsonObject = jsonDocument.object();
     return rootJsonObject;
@@ -180,7 +243,6 @@ QJsonObject MainWindow::open(const QString& absolutePath)
 
 void MainWindow::updateSavedStatus(bool saved)
 {
-
     if(saved)
     {
         this->setWindowTitle(QFileInfo(_absolutePath).fileName());
@@ -209,9 +271,9 @@ void MainWindow::clearFrames()
     }
 }
 
-QString MainWindow::getDestinationFilePathByQuestionWindow()
+QString MainWindow::getDestinationFilePathByQuestionWindow(const QString& title, QFileDialog::AcceptMode acceptMode)
 {
-    auto fileDialog = createFileDialog();
+    auto fileDialog = createFileDialog(title, acceptMode);
     fileDialog->exec();
 
     auto selectedFiles = fileDialog->selectedFiles();
