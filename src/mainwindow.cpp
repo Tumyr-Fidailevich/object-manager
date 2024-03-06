@@ -66,7 +66,7 @@ void MainWindow::openActionSlot()
     {
         auto questionResult = createQuestionMessageBox();
 
-        if(questionResult != QMessageBox::Save)
+        if(questionResult == QMessageBox::Save)
         {
             if(_absolutePath.isEmpty()) _absolutePath = getDestinationFilePathByQuestionWindow("Choose file to save", QFileDialog::AcceptSave);
 
@@ -109,7 +109,7 @@ void MainWindow::newActionSlot()
     {
         auto questionResult = createQuestionMessageBox();
 
-        if(questionResult != QMessageBox::Save)
+        if(questionResult == QMessageBox::Save)
         {
             if(_absolutePath.isEmpty()) _absolutePath = getDestinationFilePathByQuestionWindow("Choose file to save", QFileDialog::AcceptSave);
 
