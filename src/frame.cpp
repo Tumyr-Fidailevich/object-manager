@@ -19,7 +19,9 @@ QJsonObject Frame::createJsonDump()
 
         if(!propertyName.isEmpty()) propertyObject[propertyName] = QJsonValue(description);
     }
-    dump[objectName] = propertyObject;
+    QJsonObject propertyOuterObject;
+    propertyOuterObject["Property"] = propertyObject;
+    dump[objectName] = propertyOuterObject;
     return dump;
 }
 
@@ -183,7 +185,7 @@ void Frame::setupUi()
 void Frame::connectSlots()
 {
     connect(_buttonAddProperty, &QPushButton::pressed, this, &Frame::addProperty);
-    connect(_buttonRemoveProperty, &QPushButton::pressed, this, &Frame::addProperty);
+    connect(_buttonRemoveProperty, &QPushButton::pressed, this, &Frame::removeProperty);
     connect(_buttonDeleteFrame, &QPushButton::pressed, this, &Frame::forwardDeleteButtonPressed);
     connect(_comboBox, &QComboBox::activated, this, &Frame::changeComboBoxIndex);
     connect(_comboBox, &QComboBox::currentTextChanged, this, &Frame::forwardTextChanged);
