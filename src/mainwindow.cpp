@@ -44,7 +44,7 @@ void MainWindow::saveActionSlot()
 {
     if(!_saved && !_ui->scrollAreaVLayout->isEmpty())
     {
-        if(_absolutePath.isEmpty()) _absolutePath = getDestinationFilePathByQuestionWindow();
+        if(_absolutePath.isEmpty()) _absolutePath = getDestinationFilePathByQuestionWindow("Choose file to save");
 
         if(!_absolutePath.isEmpty())
         {
@@ -55,7 +55,7 @@ void MainWindow::saveActionSlot()
 
 void MainWindow::saveAsActionSlot()
 {
-    auto absolutePath = getDestinationFilePathByQuestionWindow();
+    auto absolutePath = getDestinationFilePathByQuestionWindow("Choose file to save");
     save(absolutePath);
 }
 
@@ -66,7 +66,7 @@ void MainWindow::openActionSlot()
 
     clearFrames();
 
-    auto _absolutePath = getDestinationFilePathByQuestionWindow();
+    auto _absolutePath = getDestinationFilePathByQuestionWindow("Choose file to open");
 
     if(!_absolutePath.isEmpty())
     {
@@ -226,9 +226,9 @@ void MainWindow::clearFrames()
     }
 }
 
-QString MainWindow::getDestinationFilePathByQuestionWindow()
+QString MainWindow::getDestinationFilePathByQuestionWindow(const QString& title)
 {
-    auto fileDialog = createFileDialog();
+    auto fileDialog = createFileDialog(title);
     fileDialog->exec();
 
     auto selectedFiles = fileDialog->selectedFiles();

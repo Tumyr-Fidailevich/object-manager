@@ -69,6 +69,6 @@ private:
 
     void clearFrames();
 
-    QString getDestinationFilePathByQuestionWindow();
+    QString getDestinationFilePathByQuestionWindow(const QString& title);
 };
 #endif // MAINWINDOW_H
