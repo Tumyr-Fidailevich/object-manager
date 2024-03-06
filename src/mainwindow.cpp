@@ -42,7 +42,7 @@ void MainWindow::deleteFrame()
 
 void MainWindow::saveActionSlot()
 {
-    if(!_saved && !_ui->scrollAreaVLayout->isEmpty())
+    if(!_saved)
     {
         if(_absolutePath.isEmpty()) _absolutePath = getDestinationFilePathByQuestionWindow("Choose file to save");
 
@@ -62,7 +62,19 @@ void MainWindow::saveAsActionSlot()
 
 void MainWindow::openActionSlot()
 {
-    saveActionSlot();
+    if(!_saved && !_ui->scrollAreaVLayout->isEmpty())
+    {
+        auto questionResult = createQuestionMessageBox();
+
+        if(questionResult != QMessageBox::Save) return;
+
+        if(_absolutePath.isEmpty()) _absolutePath = getDestinationFilePathByQuestionWindow("Choose file to save");
+
+        if(!_absolutePath.isEmpty())
+        {
+            updateSavedStatus(save(_absolutePath));
+        }
+    }
 
     clearFrames();
 
@@ -73,6 +85,7 @@ void MainWindow::openActionSlot()
         auto rootJsonObject = open(_absolutePath);
         if(rootJsonObject.isEmpty() || !rootJsonObject.contains("version"))
         {
+            _absolutePath.clear();
             updateSavedStatus(false);
             return;
         }
@@ -176,7 +189,7 @@ bool MainWindow::save(const QString& absolutePath)
 
 QJsonObject MainWindow::open(const QString& absolutePath)
 {
-    QFile file(_absolutePath);
+    QFile file(absolutePath);
 
     if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
