@@ -21,3 +21,7 @@ add_executable(object-manager src/main.cpp ${SOURCES} ${HEADERS}
 target_link_libraries(object-manager PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
 target_include_directories(object-manager PRIVATE include)
+
+if(WIN32)
+    set_target_properties(object-manager PROPERTIES WIN32_EXECUTABLE TRUE)
+endif()
